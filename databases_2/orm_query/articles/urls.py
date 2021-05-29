@@ -1,7 +1,12 @@
-from django.urls import path
-
-from articles.views import articles_list
+from django.urls import path, include
+from django.conf import settings
+from articles.views import ArticleListView
 
 urlpatterns = [
-    path('', articles_list, name='articles'),
+    path('', ArticleListView.as_view(), name='articles'),
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+
+urlpatterns = [path('__debug__/', include(debug_toolbar.urls)), ] + urlpatterns

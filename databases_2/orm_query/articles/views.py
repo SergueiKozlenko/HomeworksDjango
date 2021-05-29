@@ -1,15 +1,14 @@
 from django.views.generic import ListView
-from django.shortcuts import render
-
 from .models import Article
 
 
-def articles_list(request):
-    template_name = 'articles/news.html'
-    context = {}
+class ArticleListView(ListView):
+    model = Article
 
-    # используйте этот параметр для упорядочивания результатов
-    # https://docs.djangoproject.com/en/2.2/ref/models/querysets/#django.db.models.query.QuerySet.order_by
-    ordering = '-published_at'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
 
-    return render(request, template_name, context)
+    def get_queryset(self):
+        return Article.objects.select_related('author', 'genre').\
+            only('author__name', 'genre__name', 'title', 'image', 'text')
