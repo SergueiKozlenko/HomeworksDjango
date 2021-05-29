@@ -1,3 +1,4 @@
+from django.db.models import Prefetch
 from django.views.generic import ListView
 from django.shortcuts import render
 
@@ -6,6 +7,17 @@ from articles.models import Article, Tag, Relationship
 
 class ArticleListView(ListView):
     model = Article
+
+    def get_queryset(self):
+        # return Article.objects.prefetch_related("scopes__topic__tags").all()
+        return Article.objects.prefetch_related(
+            Prefetch(
+                'scopes',
+                queryset=Relationship.objects.select_related(
+                     'topic'
+                ),
+            ),
+        ).all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
