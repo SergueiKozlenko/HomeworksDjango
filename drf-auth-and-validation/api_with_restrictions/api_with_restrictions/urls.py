@@ -15,14 +15,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
 from rest_framework.routers import DefaultRouter
+from advertisements.views import AdvertisementViewSet, FavoritesViewSet
+from api_with_restrictions import settings
+
 
 router = DefaultRouter()
-# TODO: подключите `AdvertisementViewSet`
+router.register('advertisements', AdvertisementViewSet, basename='advertisements')
+router.register('favorites', FavoritesViewSet, basename='favorites')
 
 
 urlpatterns = [
     path('api/', include(router.urls)),
     path('admin/', admin.site.urls),
-]
+] + router.urls
+
+if settings.DEBUG:
+    import debug_toolbar
+urlpatterns = [path('__debug__/', include(debug_toolbar.urls))] + urlpatterns

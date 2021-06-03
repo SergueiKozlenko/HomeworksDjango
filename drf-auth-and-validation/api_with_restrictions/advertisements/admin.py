@@ -1,3 +1,13 @@
 from django.contrib import admin
 
-# Register your models here.
+from advertisements.models import Advertisement, Favorites
+
+
+@admin.register(Advertisement)
+class AdvertisementAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Favorites)
+class FavoritesAdmin(admin.ModelAdmin):
+    pass
